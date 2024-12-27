@@ -38,6 +38,11 @@ type UserSession struct {
 	RefreshTokenExpired time.Time `json:"-" validate:"required"`
 }
 
-func (u *UserSession) TableName() string {
+func (I *UserSession) TableName() string {
 	return "user_sessions"
+}
+
+func (I *UserSession) Validate() error {
+	v := validator.New()
+	return v.Struct(I)
 }
