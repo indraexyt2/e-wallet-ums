@@ -40,7 +40,6 @@ func (s *LoginService) Login(ctx context.Context, request models.LoginRequest) (
 	}
 
 	userSession := &models.UserSession{
-		ID:                  userDetail.ID,
 		UserID:              userDetail.ID,
 		Token:               token,
 		RefreshToken:        refreshToken,

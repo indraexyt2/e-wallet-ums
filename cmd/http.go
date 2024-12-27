@@ -3,6 +3,7 @@ package cmd
 import (
 	"e-wallet-ums/helpers"
 	"e-wallet-ums/internal/api"
+	"e-wallet-ums/internal/interfaces"
 	"e-wallet-ums/internal/repository"
 	"e-wallet-ums/internal/services"
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ func ServeHTTP() {
 	userV1 := r.Group("/user/v1")
 	userV1.POST("/register", dependency.RegisterAPI.Register)
 	userV1.POST("/login", dependency.LoginAPI.Login)
+	userV1.DELETE("/logout", dependency.MiddlewareValidateAuth, dependency.LogoutAPI.Logout)
 
 	err = r.Run(":" + helpers.GetEnv("PORT", "8080"))
 	if err != nil {
@@ -32,8 +34,11 @@ func ServeHTTP() {
 }
 
 type Dependency struct {
-	RegisterAPI *api.RegisterHandler
-	LoginAPI    *api.LoginHandler
+	UserRepository interfaces.IUserRepository
+
+	RegisterAPI interfaces.IRegisterHandler
+	LoginAPI    interfaces.ILoginHandler
+	LogoutAPI   interfaces.ILogoutHandler
 }
 
 func dependencyInject() Dependency {
@@ -45,8 +50,13 @@ func dependencyInject() Dependency {
 	loginSvc := &services.LoginService{UserRepo: userRepo}
 	loginApi := &api.LoginHandler{LoginService: loginSvc}
 
+	logoutSvc := &services.LogoutService{UserRepo: userRepo}
+	logoutApi := &api.LogoutHandler{LogoutService: logoutSvc}
+
 	return Dependency{
-		RegisterAPI: registerApi,
-		LoginAPI:    loginApi,
+		UserRepository: userRepo,
+		RegisterAPI:    registerApi,
+		LoginAPI:       loginApi,
+		LogoutAPI:      logoutApi,
 	}
 }
