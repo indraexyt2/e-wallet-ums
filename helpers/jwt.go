@@ -8,6 +8,7 @@ import (
 )
 
 type ClaimToken struct {
+	UserID   int    `json:"user_id"`
 	Username string `json:"username"`
 	FullName string `json:"full_name"`
 	jwt.RegisteredClaims
@@ -22,12 +23,13 @@ var jwtSecret = []byte(GetEnv("JWT_SECRET", "secret"))
 
 func GenerateToken(ctx context.Context, userID int, username string, fullName string, tokenType string, now time.Time) (string, error) {
 	claimToken := ClaimToken{
+		UserID:   userID,
 		Username: username,
 		FullName: fullName,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    GetEnv("APP_NAME", "e-wallet-ums"),
 			IssuedAt:  jwt.NewNumericDate(now),
-			ExpiresAt: jwt.NewNumericDate(now.Add(MapTypeToken["token"])),
+			ExpiresAt: jwt.NewNumericDate(now.Add(MapTypeToken[tokenType])),
 		},
 	}
 

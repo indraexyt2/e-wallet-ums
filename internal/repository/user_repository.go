@@ -57,3 +57,29 @@ func (r *UserRepository) GetUserSessionByToken(ctx context.Context, token string
 	}
 	return session, nil
 }
+
+func (r *UserRepository) UpdateTokenByRefreshToken(ctx context.Context, token string, refreshToken string) error {
+	return r.DB.Model(&models.UserSession{}).
+		Where("refresh_token =?", refreshToken).
+		Update("token", token).Error
+}
+
+func (r *UserRepository) GetUserSessionByRefreshToken(ctx context.Context, refreshToken string) (*models.UserSession, error) {
+	var (
+		session *models.UserSession
+		err     error
+	)
+	err = r.DB.First(&session, "refresh_token = ?", refreshToken).Error
+	if err != nil {
+		return session, err
+	}
+
+	if session.ID == 0 {
+		return session, errors.New("user not found")
+	}
+
+	if session == nil || session.ID == 0 {
+		return nil, errors.New("user not found")
+	}
+	return session, nil
+}
