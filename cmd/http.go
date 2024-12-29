@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"e-wallet-ums/external"
 	"e-wallet-ums/helpers"
 	"e-wallet-ums/internal/api"
 	"e-wallet-ums/internal/interfaces"
@@ -49,8 +50,12 @@ type Dependency struct {
 
 func dependencyInject() Dependency {
 	userRepo := &repository.UserRepository{DB: helpers.DB}
+	extWallet := &external.ExtWallet{}
 
-	registerSvc := &services.RegisterService{RegisterRepo: userRepo}
+	registerSvc := &services.RegisterService{
+		RegisterRepo:   userRepo,
+		ExternalWallet: extWallet,
+	}
 	registerApi := &api.RegisterHandler{RegisterService: registerSvc}
 
 	loginSvc := &services.LoginService{UserRepo: userRepo}
