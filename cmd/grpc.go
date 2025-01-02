@@ -12,7 +12,7 @@ import (
 func ServeGRPC() {
 	dependency := dependencyInject()
 
-	lis, err := net.Listen("tcp", ":"+helpers.GetEnv("GRPC_PORT", "5000"))
+	lis, err := net.Listen("tcp", ":"+helpers.GetEnv("GRPC_PORT", ""))
 	if err != nil {
 		log.Fatal("Failed to listen grpc port: ", err)
 	}
@@ -20,7 +20,7 @@ func ServeGRPC() {
 
 	// list method
 	pb.RegisterTokenValidationServer(s, dependency.TokenValidationAPI)
-	logrus.Info("start grpc server on port: ", helpers.GetEnv("GRPC_PORT", "5000"), "")
+	logrus.Info("start grpc server on port: ", helpers.GetEnv("GRPC_PORT", "5000"))
 	if err = s.Serve(lis); err != nil {
 		log.Fatal("Failed to serve grpc port: ", err)
 	}
