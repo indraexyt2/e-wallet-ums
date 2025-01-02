@@ -15,9 +15,15 @@ type Wallet struct {
 	Balance int `json:"balance"`
 }
 
-type ExtWallet struct{}
+type External struct{}
 
-func (e *ExtWallet) CreateWallet(ctx context.Context, userID int) (*Wallet, error) {
+type WalletResponse struct {
+	Status  bool   `json:"status"`
+	Message string `json:"message"`
+	Data    Wallet `json:"data"`
+}
+
+func (e *External) CreateWallet(ctx context.Context, userID int) (*WalletResponse, error) {
 	req := Wallet{UserID: userID}
 	payload, err := json.Marshal(req)
 	if err != nil {
@@ -41,7 +47,7 @@ func (e *ExtWallet) CreateWallet(ctx context.Context, userID int) (*Wallet, erro
 		return nil, errors.New("failed to create wallet")
 	}
 
-	result := &Wallet{}
+	result := &WalletResponse{}
 	err = json.NewDecoder(resp.Body).Decode(result)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to read response body")

@@ -15,7 +15,7 @@ type RefreshTokenService struct {
 
 func (s *RefreshTokenService) RefreshToken(ctx context.Context, refreshToken string, claimToken *helpers.ClaimToken) (models.RefreshTokenResponse, error) {
 	resp := models.RefreshTokenResponse{}
-	token, err := helpers.GenerateToken(ctx, claimToken.UserID, claimToken.Username, claimToken.FullName, "token", time.Now())
+	token, err := helpers.GenerateToken(ctx, claimToken.UserID, claimToken.Username, claimToken.FullName, claimToken.Email, "token", time.Now())
 	if err != nil {
 		return resp, errors.Wrap(err, "failed to generate token")
 	}

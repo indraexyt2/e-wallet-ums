@@ -46,7 +46,7 @@ func (api *LoginHandler) Login(c *gin.Context) {
 
 	resp, err := api.LoginService.Login(c.Request.Context(), req)
 	if err != nil {
-		log.Error("failed on login service")
+		log.Error("failed on login service: ", err)
 		helpers.SendResponseHTTP(
 			c,
 			http.StatusBadRequest,

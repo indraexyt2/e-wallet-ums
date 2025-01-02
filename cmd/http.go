@@ -50,11 +50,11 @@ type Dependency struct {
 
 func dependencyInject() Dependency {
 	userRepo := &repository.UserRepository{DB: helpers.DB}
-	extWallet := &external.ExtWallet{}
+	ext := &external.External{}
 
 	registerSvc := &services.RegisterService{
-		RegisterRepo:   userRepo,
-		ExternalWallet: extWallet,
+		RegisterRepo: userRepo,
+		External:     ext,
 	}
 	registerApi := &api.RegisterHandler{RegisterService: registerSvc}
 

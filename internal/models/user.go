@@ -32,8 +32,8 @@ type UserSession struct {
 	CreatedAt           time.Time
 	UpdatedAt           time.Time
 	UserID              int       `json:"user_id" gorm:"column:user_id;type:int" validate:"required"`
-	Token               string    `json:"token" gorm:"column:token;type:varchar(255)" validate:"required"`
-	RefreshToken        string    `json:"refresh_token" gorm:"column:refresh_token;type:varchar(255)" validate:"required"`
+	Token               string    `json:"token" gorm:"column:token;type:varchar(500)" validate:"required"`
+	RefreshToken        string    `json:"refresh_token" gorm:"column:refresh_token;type:varchar(500)" validate:"required"`
 	TokenExpired        time.Time `json:"-" validate:"required"`
 	RefreshTokenExpired time.Time `json:"-" validate:"required"`
 }
